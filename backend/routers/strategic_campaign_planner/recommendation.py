@@ -43,26 +43,71 @@ Your goal is to recommend personalized ad platforms for the business below by co
 3. Only relevant local events — NOT general ones. Show only events that are directly useful for this business based on their industry or interests.
 
 Be specific:
-- Each event should include: name, date, location, and a relevance explanation.
-- Weather impact should also describe how it helps or limits campaign performance (e.g., rain = more indoor/mobile engagement)
+
+Each event must include:
+- name
+- date
+- location: {{
+    street,
+    city,
+    state,
+    zip,
+    mapsLink (Google Maps URL to exact venue),
+    eventWebsite (if available)
+  }}
+- relevance: A brief explanation of why this event is relevant to the business
 
 Your JSON must include:
 
-1. "recommendedPlatforms": 4–6 best-fit ad platforms
-2. "notRecommendedPlatforms": 2–4 platforms that are not ideal
+1. "recommendedPlatforms": [
+    {{
+      "name": "Platform Name",
+      "matchScore": number (0–100),
+      "rationale": "Why this is a good fit for the business",
+      "campaignTypes": ["Video Ads", "Display Ads", "Podcast Ads", ...]
+    }}
+  ]
+
+2. "notRecommendedPlatforms": [
+    {{
+      "name": "Platform Name",
+      "matchScore": number (0–100),
+      "rationale": "Why this platform is not suitable for this business"
+    }}
+  ]
+
 3. "keywords": {{
    "globalKeywords": [...],
    "localKeywords": [...]
 }}
-4. "competitors": 4 local competitors in {data.location} and 3 national ones
+
+4. "competitors": [
+  {{
+    "name": "Competitor Name",
+    "description": "What they do",
+    "estimatedMonthlyTraffic": "Number or N/A",
+    "marketingChannels": ["Facebook", "Google Ads", ...],
+    "strength": "What they do well",
+    "weakness": "What they lack"
+  }}
+]
+
 5. "strategyTips": 3 suggestions for boosting results
+
 6. "localContext": {{
    "weatherSummary": "...",
    "eventsSummary": [
      {{
        "name": "...",
        "date": "...",
-       "location": "...",
+       "location": {{
+         "street": "...",
+         "city": "...",
+         "state": "...",
+         "zip": "...",
+         "mapsLink": "...",
+         "eventWebsite": "..."
+       }},
        "relevance": "..."
      }}
    ]
@@ -80,6 +125,7 @@ Business Info:
 Return valid JSON only.
 """
 
+
     try:
         response = requests.post(
             "https://api.perplexity.ai/chat/completions",
@@ -96,26 +142,22 @@ Return valid JSON only.
         raw_text = response.json()["choices"][0]["message"]["content"]
         print("\n📦 Perplexity raw response:\n", raw_text)
 
-        # Step 1: Strip ```json wrapper
+        # Strip ```json or ``` wrappers
         if raw_text.strip().startswith("```json"):
             raw_text = raw_text.strip()[7:-3].strip()
         elif raw_text.strip().startswith("```"):
             raw_text = raw_text.strip()[3:-3].strip()
 
-        # Step 2: Extract block
+        # Extract JSON block
         match = re.search(r"\{.*\}", raw_text, re.DOTALL)
         if not match:
             raise HTTPException(status_code=500, detail="No valid JSON found.")
         json_block = match.group(0)
 
-        # Step 3: Normalize and deeply quote unquoted keys
-        json_block = re.sub(r"\[\d+\]", "", json_block)  # Remove [1], [2]
+        # Normalize quotes and keys
+        json_block = re.sub(r"\[\d+\]", "", json_block)
         json_block = json_block.replace("‘", "'").replace("’", "'").replace("“", "\"").replace("”", "\"")
-
-        # ✅ FIX: Quote all unquoted keys using a stricter regex (deep fix)
         json_block = re.sub(r'([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)(\s*):', r'\1"\2"\3:', json_block)
-
-        # Remove trailing commas
         json_block = re.sub(r",\s*(\}|\])", r"\1", json_block)
 
         print("\n✅ Cleaned JSON block:\n", json_block)
@@ -129,8 +171,18 @@ Return valid JSON only.
         if not isinstance(parsed["keywords"], dict):
             raise HTTPException(status_code=500, detail="Invalid keywords")
 
-        if "weatherSummary" not in parsed["localContext"] or "eventsSummary" not in parsed["localContext"]:
+        local_ctx = parsed["localContext"]
+        if "weatherSummary" not in local_ctx or "eventsSummary" not in local_ctx:
             raise HTTPException(status_code=500, detail="Missing weatherSummary/eventsSummary")
+
+        # Auto-generate mapsLink if missing
+        for event in local_ctx["eventsSummary"]:
+            loc = event.get("location", {})
+            if "mapsLink" not in loc or not loc["mapsLink"]:
+                address = f"{loc.get('street', '')}, {loc.get('city', '')}, {loc.get('state', '')} {loc.get('zip', '')}"
+                maps_url = f"https://www.google.com/maps/search/?api=1&query={requests.utils.quote(address)}"
+                loc["mapsLink"] = maps_url
+                event["location"] = loc
 
         return {
             "recommendedPlatforms": parsed["recommendedPlatforms"],
