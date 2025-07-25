@@ -1,0 +1,26 @@
+# Frontend
+/frontend/node_modules/
+/frontend/.env
+/frontend/dist/
+/frontend/build/
+
+# Backend
+/backend/__pycache__/
+/backend/.env
+/backend/console.txt
+/backend/broken_llm_output.json
+
+# Common build/output folders
+dist/
+build/
+
+# IDE/editor config
+.vscode/
+.idea/
+
+# OS/System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
