@@ -180,7 +180,7 @@ Return valid JSON only.
             loc = event.get("location", {})
             if "mapsLink" not in loc or not loc["mapsLink"]:
                 address = f"{loc.get('street', '')}, {loc.get('city', '')}, {loc.get('state', '')} {loc.get('zip', '')}"
-                maps_url = f"https://www.google.com/maps/search/?api=1&query={requests.utils.quote(address)}"
+                maps_url = f"https://www.google.com/maps/dir/?api=1&destination={requests.utils.quote(address)}"
                 loc["mapsLink"] = maps_url
                 event["location"] = loc
 
