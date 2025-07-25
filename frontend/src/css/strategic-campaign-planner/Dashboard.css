@@ -1,0 +1,146 @@
+.dashboard {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f5f5fc;
+}
+
+.dashboard-header {
+  text-align: center;
+  padding: 50px 20px 30px;
+}
+
+.dashboard-title {
+  font-size: 40px;
+  font-weight: 700;
+  color: #7b3fe4;
+  text-align: center;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.dashboard-subtext {
+  color: #666;
+  font-size: 16px;
+  margin-top: 12px;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.feature-cards {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.feature-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+  width: 240px;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.feature-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.feature-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.feature-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.feature-info span {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.workspace-section {
+  background-color: transparent;
+  padding: 20px 0;
+  margin: 5px auto;
+  width: 90%;
+  max-width: 1200px;
+}
+
+.workspace-header {
+  background-color: #7b3fe4;
+  color: white;
+  padding: 30px 40px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.workspace-header h2 {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.workspace-header p {
+  font-size: 14px;
+  color: #ddd;
+}
+
+.tabs {
+  background-color: white;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 56px;
+  border-bottom: 1px solid #eee;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: #444;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  padding: 12px 10px;
+}
+
+.tab-btn.active {
+  border-color: #7b3fe4;
+  color: #7b3fe4;
+  font-weight: 600;
+}
+
+.tab-content {
+  padding: 40px;
+  background-color: white;
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  margin-top: -10px;
+}

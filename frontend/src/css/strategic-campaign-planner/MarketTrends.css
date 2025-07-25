@@ -1,0 +1,90 @@
+.market-trends-section {
+  background: radial-gradient(circle at top left, #f7f5ff, #ffffff);
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 12px 28px rgba(123, 63, 228, 0.08);
+  margin-top: 2.5rem;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.market-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.market-header h2 {
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  color: #3c1e80;
+}
+
+.market-header p {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.trend-group h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #5b21b6;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.trend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.trend-card {
+  background: linear-gradient(to bottom right, #ede9fe, #faf5ff);
+  border: 1px solid #dcd2fe;
+  border-radius: 14px;
+  padding: 1.1rem 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(123, 63, 228, 0.05);
+  cursor: pointer;
+  position: relative;
+}
+
+.trend-card:hover {
+  transform: translateY(-5px) scale(1.015);
+  background: linear-gradient(to bottom right, #e0d4ff, #f8f4ff);
+  box-shadow: 0 10px 25px rgba(123, 63, 228, 0.15);
+}
+
+.trend-icon {
+  font-size: 1.6rem;
+  color: #7c3aed;
+  flex-shrink: 0;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.keyword-text {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #2b2b2b;
+  text-transform: capitalize;
+}

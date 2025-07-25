@@ -1,0 +1,37 @@
+.no-strategy {
+  text-align: center;
+  padding: 60px 20px;
+  color: #374151;
+}
+
+.no-strategy .icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.no-strategy h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.no-strategy p {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.no-strategy button {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.no-strategy button:hover {
+  background-color: #f3f3f3;
+}
