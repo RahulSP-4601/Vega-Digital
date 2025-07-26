@@ -77,7 +77,7 @@ const StrategyForm = ({ onSubmit }) => {
 
       const result = await res.json();
 
-      const requiredKeys = ["recommendedPlatforms", "notRecommendedPlatforms", "keywords", "competitors", "strategyTips"];
+      const requiredKeys = ["recommendedPlatforms", "notRecommendedPlatforms", "keywords", "competitors", "strategyTips", "localContext"];
       const missing = requiredKeys.filter(key => !(key in result));
       if (missing.length) {
         console.error("❌ Missing keys in API response:", missing);

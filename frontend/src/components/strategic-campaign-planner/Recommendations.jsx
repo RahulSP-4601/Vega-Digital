@@ -52,64 +52,68 @@ const Recommendations = () => {
 
   const getMatchLabel = (score, index, highestScore) => {
     if (index === 0) return "Highly Recommended";
-    if (!score || !highestScore) return "Unknown Match";
+    if (!score || !highestScore) return "Match score unavailable";
     const percent = Math.round((score / highestScore) * 100);
     return `${percent}% Match`;
   };
 
-  const renderPlatformCards = (platforms, highestScore, isRecommended) => (
-    <div className={`recommendation-cards ${isRecommended ? '' : 'not-recommended'}`}>
-      {platforms.map((platform, index) => (
-        <motion.div
-          key={index}
-          className={`recommendation-card ${isRecommended ? '' : 'faded'}`}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1 }}
-        >
-          <div className="icon-title">
-            <span className="icon-box">{platformIcons[platform.name] || '📊'}</span>
-            <h4>{platform.name || "Unnamed Platform"}</h4>
-          </div>
-          <div className="match-budget">
-            <span className={`badge ${isRecommended ? '' : 'gray'}`}>
-              {isRecommended
-                ? getMatchLabel(platform.matchScore, index, highestScore)
-                : (platform.matchScore ? `${platform.matchScore}% Match` : "Unknown Match")}
-            </span>
-          </div>
-          <div className="section">
-            <strong>{isRecommended ? 'AI Reasoning:' : 'Why Not Recommended:'}</strong>
-            <p>{platform.rationale || "No explanation provided."}</p>
-          </div>
-          {isRecommended && Array.isArray(platform.campaignTypes) && platform.campaignTypes.length > 0 && (
-            <div className="section">
-              <strong>Recommended Campaign Types:</strong>
-              <div className="tag-list">
-                {platform.campaignTypes.map((type, i) => (
-                  <span key={i} className="tag">{type}</span>
-                ))}
-              </div>
-            </div>
-          )}
-        </motion.div>
-      ))}
-    </div>
-  );
-
-  const renderPlatforms = () => {
-    if (!recommendation || !Array.isArray(recommendation.recommendedPlatforms)) {
-      return <p>No campaign recommendations found. Please generate a strategy first.</p>;
-    }
-
-    const sortedRecommended = [...recommendation.recommendedPlatforms].sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
-    const highestScore = sortedRecommended[0]?.matchScore || 1;
-
+  const renderPlatformCards = (platforms, isRecommended) => {
+    const highestScore = platforms[0]?.matchScore || 100;
     return (
-      <>
-        
+      <div className={`recommendation-cards ${isRecommended ? '' : 'not-recommended'}`}>
+        {platforms.map((platform, index) => (
+          <motion.div
+            key={index}
+            className={`recommendation-card ${isRecommended ? '' : 'faded'}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+          >
+            <div className="icon-title">
+              <span className="icon-box">{platformIcons[platform.name] || '📊'}</span>
+              <h4>{platform.name}</h4>
+            </div>
+            <div className="match-budget">
+              <span className={`badge ${isRecommended ? '' : 'gray'}`}>
+                {isRecommended
+                  ? getMatchLabel(platform.matchScore, index, highestScore)
+                  : platform.matchScore ? `${platform.matchScore}% Match` : "Match score unavailable"}
+              </span>
+            </div>
+            <div className="section">
+              <strong>{isRecommended ? 'AI Reasoning:' : 'Why Not Recommended:'}</strong>
+              <p>{platform.rationale}</p>
+            </div>
+            {isRecommended && Array.isArray(platform.campaignTypes) && platform.campaignTypes.length > 0 && (
+              <div className="section">
+                <strong>Recommended Campaign Types:</strong>
+                <div className="tag-list">
+                  {platform.campaignTypes.map((type, i) => (
+                    <span key={i} className="tag">{type}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </motion.div>
+        ))}
+      </div>
+    );
+  };
 
-        {recommendation.localContext && (
+  return (
+    <div>
+      <div className="recommendation-header">
+        <div>
+          <h2>AI Campaign Recommendations</h2>
+          <p>Personalized strategies based on your business and market</p>
+        </div>
+        <button className="export-btn" onClick={handleDownload}>
+          <FiDownload /> Export Blueprint
+        </button>
+      </div>
+
+      <div className="recommendation-wrapper" ref={pdfRef}>
+        {recommendation?.localContext && (
           <div className="local-context-banner">
             <h2>🌤️ Weather Insights</h2>
             <p>{recommendation.localContext.weatherSummary}</p>
@@ -139,17 +143,13 @@ const Recommendations = () => {
           </div>
         )}
 
-        <h2>Channel Recommended Platforms</h2>
-        {renderPlatformCards(sortedRecommended, highestScore, true)}
+        <h2>🏆 Channel Recommended Platforms</h2>
+        {Array.isArray(recommendation?.recommendedPlatforms) && recommendation.recommendedPlatforms.length > 0 && renderPlatformCards(recommendation.recommendedPlatforms, true)}
+        <br />
+        <h2>🚫 Not Channel Recommended Platforms</h2>
+        {Array.isArray(recommendation?.notRecommendedPlatforms) && recommendation.notRecommendedPlatforms.length > 0 && renderPlatformCards(recommendation.notRecommendedPlatforms, false)}
 
-        {Array.isArray(recommendation.notRecommendedPlatforms) && recommendation.notRecommendedPlatforms.length > 0 && (
-          <>
-            <h2>Channel Platforms Not Recommended</h2>
-            {renderPlatformCards(recommendation.notRecommendedPlatforms, 100, false)}
-          </>
-        )}
-
-        {Array.isArray(recommendation.strategyTips) && recommendation.strategyTips.length > 0 && (
+        {Array.isArray(recommendation?.strategyTips) && recommendation.strategyTips.length > 0 && (
           <div className="strategy-tips-box">
             <h2 className="tips-title">💡 Strategy Tips</h2>
             <ul className="tips-list">
@@ -159,24 +159,6 @@ const Recommendations = () => {
             </ul>
           </div>
         )}
-      </>
-    );
-  };
-
-  return (
-    <div>
-      <div className="recommendation-header">
-        <div>
-          <h2>AI Campaign Recommendations</h2>
-          <p>Personalized strategies based on your goals and industry benchmarks</p>
-        </div>
-        <button className="export-btn" onClick={handleDownload}>
-          <FiDownload /> Export Blueprint
-        </button>
-      </div>
-
-      <div className="recommendation-wrapper" ref={pdfRef}>
-        {renderPlatforms()}
       </div>
     </div>
   );

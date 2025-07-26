@@ -37,80 +37,35 @@ def generate_recommendation(data: RecommendationRequest):
     prompt = f"""
 You are a digital advertising strategist and campaign planner with access to real-time weather and event data.
 
-Your goal is to recommend personalized ad platforms for the business below by combining:
+Your goal is to recommend 3–5 personalized ad platforms that are highly relevant for the business below, and also list 2–3 ad platforms that are not suitable. Base your recommendations on:
 1. Their goals, industry, and target location
 2. The current weather forecast in that location
-3. Only relevant local events — NOT general ones. Show only events that are directly useful for this business based on their industry or interests.
+3. Only relevant local events — NOT general ones
 
-Be specific:
-
-Each event must include:
+Each recommended platform must include:
 - name
-- date
-- location: {{
-    street,
-    city,
-    state,
-    zip,
-    mapsLink (Google Maps URL to exact venue),
-    eventWebsite (if available)
-  }}
-- relevance: A brief explanation of why this event is relevant to the business
+- matchScore (0–100)
+- rationale
+- campaignTypes
+
+Each not recommended platform must include:
+- name
+- matchScore (0–100)
+- rationale
 
 Your JSON must include:
 
-1. "recommendedPlatforms": [
-    {{
-      "name": "Platform Name",
-      "matchScore": number (0–100),
-      "rationale": "Why this is a good fit for the business",
-      "campaignTypes": ["Video Ads", "Display Ads", "Podcast Ads", ...]
-    }}
-  ]
-
-2. "notRecommendedPlatforms": [
-    {{
-      "name": "Platform Name",
-      "matchScore": number (0–100),
-      "rationale": "Why this platform is not suitable for this business"
-    }}
-  ]
-
-3. "keywords": {{
-   "globalKeywords": [...],
-   "localKeywords": [...]
-}}
-
-4. "competitors": [
-  {{
-    "name": "Competitor Name",
-    "description": "What they do",
-    "estimatedMonthlyTraffic": "Number or N/A",
-    "marketingChannels": ["Facebook", "Google Ads", ...],
-    "strength": "What they do well",
-    "weakness": "What they lack"
-  }}
-]
-
-5. "strategyTips": 3 suggestions for boosting results
-
-6. "localContext": {{
+"recommendedPlatforms": [{{ name, matchScore, rationale, campaignTypes }}],
+"notRecommendedPlatforms": [{{ name, matchScore, rationale }}],
+"keywords": {{
+   "globalKeywords": ["..."],
+   "localKeywords": ["..."]
+}},
+"competitors": [{{ name, description, estimatedMonthlyTraffic, marketingChannels, strength, weakness }}],
+"strategyTips": ["...", "...", "..."],
+"localContext": {{
    "weatherSummary": "...",
-   "eventsSummary": [
-     {{
-       "name": "...",
-       "date": "...",
-       "location": {{
-         "street": "...",
-         "city": "...",
-         "state": "...",
-         "zip": "...",
-         "mapsLink": "...",
-         "eventWebsite": "..."
-       }},
-       "relevance": "..."
-     }}
-   ]
+   "eventsSummary": [{{ name, date, location, relevance }}]
 }}
 
 Business Info:
@@ -124,7 +79,6 @@ Business Info:
 
 Return valid JSON only.
 """
-
 
     try:
         response = requests.post(
@@ -142,19 +96,16 @@ Return valid JSON only.
         raw_text = response.json()["choices"][0]["message"]["content"]
         print("\n📦 Perplexity raw response:\n", raw_text)
 
-        # Strip ```json or ``` wrappers
         if raw_text.strip().startswith("```json"):
             raw_text = raw_text.strip()[7:-3].strip()
         elif raw_text.strip().startswith("```"):
             raw_text = raw_text.strip()[3:-3].strip()
 
-        # Extract JSON block
         match = re.search(r"\{.*\}", raw_text, re.DOTALL)
         if not match:
             raise HTTPException(status_code=500, detail="No valid JSON found.")
         json_block = match.group(0)
 
-        # Normalize quotes and keys
         json_block = re.sub(r"\[\d+\]", "", json_block)
         json_block = json_block.replace("‘", "'").replace("’", "'").replace("“", "\"").replace("”", "\"")
         json_block = re.sub(r'([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)(\s*):', r'\1"\2"\3:', json_block)
@@ -175,14 +126,20 @@ Return valid JSON only.
         if "weatherSummary" not in local_ctx or "eventsSummary" not in local_ctx:
             raise HTTPException(status_code=500, detail="Missing weatherSummary/eventsSummary")
 
-        # Auto-generate mapsLink if missing
+        if not isinstance(local_ctx["eventsSummary"], list):
+            raise HTTPException(status_code=500, detail="eventsSummary should be a list")
+
+        print("\n📌 Parsed eventsSummary:\n", local_ctx["eventsSummary"])
+
         for event in local_ctx["eventsSummary"]:
-            loc = event.get("location", {})
-            if "mapsLink" not in loc or not loc["mapsLink"]:
-                address = f"{loc.get('street', '')}, {loc.get('city', '')}, {loc.get('state', '')} {loc.get('zip', '')}"
-                maps_url = f"https://www.google.com/maps/dir/?api=1&destination={requests.utils.quote(address)}"
-                loc["mapsLink"] = maps_url
-                event["location"] = loc
+            if isinstance(event, dict):
+                loc = event.get("location", {})
+                if isinstance(loc, dict):
+                    if "mapsLink" not in loc or not loc["mapsLink"]:
+                        address = f"{loc.get('street', '')}, {loc.get('city', '')}, {loc.get('state', '')} {loc.get('zip', '')}"
+                        maps_url = f"https://www.google.com/maps/dir/?api=1&destination={requests.utils.quote(address)}"
+                        loc["mapsLink"] = maps_url
+                        event["location"] = loc
 
         return {
             "recommendedPlatforms": parsed["recommendedPlatforms"],
