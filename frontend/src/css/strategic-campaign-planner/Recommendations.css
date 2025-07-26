@@ -206,3 +206,11 @@
   font-size: 14px;
   text-decoration: none;
 }
+
+.gemini-container {
+  background: #f0f9ff;
+  border-left: 6px solid #1d4ed8;
+  padding: 2rem;
+  border-radius: 16px;
+  margin-top: 3rem;
+}

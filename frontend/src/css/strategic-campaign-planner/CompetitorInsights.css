@@ -1,5 +1,5 @@
 .competitor-insights {
-  background-color: #ffffff;
+  background: radial-gradient(circle at top left, #f7f5ff, #ffffff);
   padding: 2.5rem;
   border-radius: 20px;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);

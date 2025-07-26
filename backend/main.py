@@ -4,11 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="Vega Digital API",
-    description="Marketing Campaign Planner powered by Gemini",
+    description="Marketing Campaign Planner powered by Gemini + Perplexity",
     version="1.0.0"
 )
 
-# Allow React Vite (port 5173) and CRA (3000)
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
@@ -24,8 +23,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routes
+# Register routers (Perplexity + Gemini both live in recommendation)
 app.include_router(strategy.router, prefix="/strategy", tags=["Strategy"])
 app.include_router(recommendation.router, prefix="/recommendation", tags=["Recommendation"])
 # app.include_router(competitor.router, prefix="/competitor", tags=["Competitor"])
-#app.include_router(trends.router, tags=["Market Trends"])  # Registers /market-trends
+# app.include_router(trends.router, tags=["Market Trends"])  # Uncomment when needed
