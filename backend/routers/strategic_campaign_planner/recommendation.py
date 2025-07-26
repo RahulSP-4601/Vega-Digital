@@ -129,17 +129,27 @@ Return valid JSON only.
         if not isinstance(local_ctx["eventsSummary"], list):
             raise HTTPException(status_code=500, detail="eventsSummary should be a list")
 
-        print("\n📌 Parsed eventsSummary:\n", local_ctx["eventsSummary"])
-
+        # Fix event.location from string to dict with mapsLink
         for event in local_ctx["eventsSummary"]:
             if isinstance(event, dict):
-                loc = event.get("location", {})
-                if isinstance(loc, dict):
-                    if "mapsLink" not in loc or not loc["mapsLink"]:
-                        address = f"{loc.get('street', '')}, {loc.get('city', '')}, {loc.get('state', '')} {loc.get('zip', '')}"
-                        maps_url = f"https://www.google.com/maps/dir/?api=1&destination={requests.utils.quote(address)}"
-                        loc["mapsLink"] = maps_url
-                        event["location"] = loc
+                loc = event.get("location")
+                if isinstance(loc, str):
+                    city = loc.split(",")[0].strip() if "," in loc else loc.strip()
+                    state = loc.split(",")[1].strip() if "," in loc else ""
+                    event["location"] = {
+                        "street": "",
+                        "city": city,
+                        "state": state,
+                        "zip": "",
+                    }
+                loc = event["location"]
+                if isinstance(loc, dict) and "mapsLink" not in loc:
+                    address = f"{loc.get('street', '')}, {loc.get('city', '')}, {loc.get('state', '')} {loc.get('zip', '')}"
+                    maps_url = f"https://www.google.com/maps/dir/?api=1&destination={requests.utils.quote(address)}"
+                    loc["mapsLink"] = maps_url
+                    event["location"] = loc
+
+        print("\n📌 Parsed eventsSummary:\n", local_ctx["eventsSummary"])
 
         return {
             "recommendedPlatforms": parsed["recommendedPlatforms"],

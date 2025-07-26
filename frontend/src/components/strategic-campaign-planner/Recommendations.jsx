@@ -100,6 +100,16 @@ const Recommendations = () => {
     );
   };
 
+  const renderEventLocation = (location) => {
+    if (typeof location === 'string') {
+      return location;
+    } else if (typeof location === 'object') {
+      const { street = '', city = '', state = '', zip = '' } = location;
+      return `${street}${street && ','} ${city}${city && ','} ${state} ${zip}`;
+    }
+    return '';
+  };
+
   return (
     <div>
       <div className="recommendation-header">
@@ -126,9 +136,9 @@ const Recommendations = () => {
                     <div key={i} className="event-card">
                       <h5>{event.name}</h5>
                       <p><strong>Date:</strong> {event.date}</p>
-                      <p><strong>Location:</strong> {event.location?.street}, {event.location?.city}, {event.location?.state} {event.location?.zip}</p>
+                      <p><strong>Location:</strong> {renderEventLocation(event.location)}</p>
                       <p><strong>Relevance:</strong> {event.relevance}</p>
-                      {event.location?.mapsLink && (
+                      {typeof event.location === 'object' && event.location?.mapsLink && (
                         <p>
                           <a href={event.location.mapsLink} target="_blank" rel="noopener noreferrer">
                             📍 Open in Google Maps
@@ -145,7 +155,7 @@ const Recommendations = () => {
 
         <h2>🏆 Channel Recommended Platforms</h2>
         {Array.isArray(recommendation?.recommendedPlatforms) && recommendation.recommendedPlatforms.length > 0 && renderPlatformCards(recommendation.recommendedPlatforms, true)}
-        <br />
+
         <h2>🚫 Not Channel Recommended Platforms</h2>
         {Array.isArray(recommendation?.notRecommendedPlatforms) && recommendation.notRecommendedPlatforms.length > 0 && renderPlatformCards(recommendation.notRecommendedPlatforms, false)}
 
