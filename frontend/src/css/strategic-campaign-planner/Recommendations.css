@@ -1,8 +1,9 @@
 .recommendation-wrapper {
   padding: 40px;
   font-family: "Inter", "Segoe UI", sans-serif;
-  background: linear-gradient(to bottom, #f9fafe, #ffffff);
+  background: radial-gradient(circle at top left, #f7f5ff, #ffffff);
   min-height: 100vh;
+  border-radius: 20px;
 }
 
 .recommendation-header {
@@ -140,7 +141,7 @@
 }
 
 .tips-title {
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 700;
   color: #92400e;
   margin-bottom: 16px;

@@ -107,16 +107,16 @@ const Recommendations = () => {
 
     return (
       <>
-        <h2 style={{ color: 'black' }}>Perplexity API Response</h2>
+        
 
         {recommendation.localContext && (
           <div className="local-context-banner">
-            <h4>🌤️ Weather Insights</h4>
+            <h2>🌤️ Weather Insights</h2>
             <p>{recommendation.localContext.weatherSummary}</p>
 
             {Array.isArray(recommendation.localContext.eventsSummary) && recommendation.localContext.eventsSummary.length > 0 && (
               <div className="events-summary">
-                <h4>📅 Relevant Upcoming Events</h4>
+                <h3>📅 Relevant Upcoming Events</h3>
                 <div className="event-grid">
                   {recommendation.localContext.eventsSummary.map((event, i) => (
                     <div key={i} className="event-card">
@@ -139,19 +139,19 @@ const Recommendations = () => {
           </div>
         )}
 
-        <h3>Channel Recommended Platforms</h3>
+        <h2>Channel Recommended Platforms</h2>
         {renderPlatformCards(sortedRecommended, highestScore, true)}
 
         {Array.isArray(recommendation.notRecommendedPlatforms) && recommendation.notRecommendedPlatforms.length > 0 && (
           <>
-            <h3>Channel Platforms Not Recommended</h3>
+            <h2>Channel Platforms Not Recommended</h2>
             {renderPlatformCards(recommendation.notRecommendedPlatforms, 100, false)}
           </>
         )}
 
         {Array.isArray(recommendation.strategyTips) && recommendation.strategyTips.length > 0 && (
           <div className="strategy-tips-box">
-            <h3 className="tips-title">💡 Strategy Tips</h3>
+            <h2 className="tips-title">💡 Strategy Tips</h2>
             <ul className="tips-list">
               {recommendation.strategyTips.map((tip, idx) => (
                 <li key={idx} className="tip-item">👉 {tip}</li>

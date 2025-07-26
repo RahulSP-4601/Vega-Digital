@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './../../css/strategic-campaign-planner/StrategyForm.css';
+import Loader from './Loader';
 
 const steps = ['Business Info', 'Business Goals', 'Target Audience', 'Review & Generate'];
 
@@ -17,6 +18,7 @@ const StrategyForm = ({ onSubmit }) => {
   const [step, setStep] = useState(0);
   const [data, setData] = useState(initialData);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleCheckboxChange = (e, field) => {
     const { value, checked } = e.target;
@@ -60,6 +62,7 @@ const StrategyForm = ({ onSubmit }) => {
   const prevStep = () => setStep(prev => Math.max(prev - 1, 0));
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       const res = await fetch("http://localhost:8000/recommendation/generate-recommendation", {
         method: "POST",
@@ -86,6 +89,8 @@ const StrategyForm = ({ onSubmit }) => {
     } catch (err) {
       console.error("Recommendation API error:", err);
       alert("❌ Failed to generate recommendation. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -233,7 +238,9 @@ const StrategyForm = ({ onSubmit }) => {
               <p>{data.industry}</p>
             </div>
 
-            <button className="submit-btn" onClick={handleSubmit}>Generate Strategy</button>
+            <button className="submit-btn" onClick={handleSubmit} disabled={loading}>
+              {loading ? 'Generating...' : 'Generate Strategy'}
+            </button>
           </div>
         );
 
@@ -253,6 +260,8 @@ const StrategyForm = ({ onSubmit }) => {
           {step < steps.length - 1 && <button onClick={nextStep}>Next</button>}
         </div>
       </div>
+
+      {loading && <Loader />}
     </div>
   );
 };
