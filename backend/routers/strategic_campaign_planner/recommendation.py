@@ -10,6 +10,9 @@ import re
 load_dotenv()
 router = APIRouter()
 
+def sanitize_text(text):
+    return text.encode('utf-8', 'surrogatepass').decode('utf-8', 'ignore')
+
 class RecommendationRequest(BaseModel):
     businessName: str
     businessDescription: str
@@ -86,7 +89,7 @@ Return valid JSON only.
             headers=headers,
             json={
                 "model": "sonar-pro",
-                "messages": [{"role": "user", "content": prompt}]
+                "messages": [{"role": "user", "content": sanitize_text(prompt)}]
             }
         )
 
@@ -129,7 +132,6 @@ Return valid JSON only.
         if not isinstance(local_ctx["eventsSummary"], list):
             raise HTTPException(status_code=500, detail="eventsSummary should be a list")
 
-        # Fix event.location from string to dict with mapsLink
         for event in local_ctx["eventsSummary"]:
             if isinstance(event, dict):
                 loc = event.get("location")
@@ -151,13 +153,72 @@ Return valid JSON only.
 
         print("\n📌 Parsed eventsSummary:\n", local_ctx["eventsSummary"])
 
+        content_prompt = f"""
+You are an AI content strategist.
+
+For each of the following ad platforms, generate 3 individual content recommendation sets.
+
+Each set should include:
+- a caption
+- an explanation of why it works for the business
+- relevant hashtags (as an array)
+
+Output JSON format:
+[
+  {{
+    "platform": "Instagram",
+    "recommendations": [
+      {{
+        "caption": "...",
+        "explanation": "...",
+        "hashtags": ["...", "..."]
+      }},
+      ...
+    ]
+  }},
+  ...
+]
+
+Business Description:
+{data.businessDescription}
+
+Recommended Platforms:
+{[p['name'] for p in parsed['recommendedPlatforms']]}
+"""
+
+        content_response = requests.post(
+            "https://api.perplexity.ai/chat/completions",
+            headers=headers,
+            json={
+                "model": "sonar-pro",
+                "messages": [{"role": "user", "content": sanitize_text(content_prompt)}]
+            }
+        )
+
+        if content_response.status_code != 200:
+            raise HTTPException(status_code=500, detail=f"Content Generation Error: {content_response.text}")
+
+        content_text = content_response.json()["choices"][0]["message"]["content"]
+        print("\n🧠 Content Recommendation Raw Response:\n", content_text)
+
+        if content_text.strip().startswith("```json"):
+            content_text = content_text.strip()[7:-3].strip()
+        elif content_text.strip().startswith("```"):
+            content_text = content_text.strip()[3:-3].strip()
+
+        content_text = re.sub(r'([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)(\s*):', r'\1"\2"\3:', content_text)
+        content_text = re.sub(r",\s*(\}|\])", r"\1", content_text)
+
+        content_recommendation = json.loads(content_text)
+
         return {
             "recommendedPlatforms": parsed["recommendedPlatforms"],
             "notRecommendedPlatforms": parsed["notRecommendedPlatforms"],
             "keywords": parsed["keywords"],
             "competitors": parsed["competitors"],
             "strategyTips": parsed["strategyTips"],
-            "localContext": parsed["localContext"]
+            "localContext": parsed["localContext"],
+            "contentRecommendation": content_recommendation
         }
 
     except json.JSONDecodeError as jde:

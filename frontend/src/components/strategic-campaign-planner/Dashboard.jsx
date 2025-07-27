@@ -4,11 +4,12 @@ import StrategyForm from './StrategyForm';
 import Recommendations from './Recommendations';
 import CompetitorInsights from './CompetitorInsights';
 import MarketTrends from './MarketTrends';
+import ContentGeneration from './ContentGeneration'; // ✅ NEW IMPORT
 import NoStrategyMessage from './NoStrategyMessage';
 import './../../css/strategic-campaign-planner/StrategyForm.css';
 import './../../css/strategic-campaign-planner/Dashboard.css';
 
-const tabs = ['Strategy Builder', 'Market Trends', 'Recommendations', 'Competitor Analysis'];
+const tabs = ['Strategy Builder', 'Market Trends', 'Recommendations', 'Competitor Analysis', 'Content Recommendation'];
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('Strategy Builder');
@@ -29,6 +30,8 @@ const Dashboard = () => {
         return submittedData ? <CompetitorInsights data={submittedData} /> : <NoStrategyMessage onBack={setActiveTab} />;
       case 'Market Trends':
         return submittedData ? <MarketTrends data={submittedData} /> : <NoStrategyMessage onBack={setActiveTab} />;
+      case 'Content Recommendation':
+        return submittedData ? <ContentGeneration data={submittedData} /> : <NoStrategyMessage onBack={setActiveTab} />;
       default:
         return null;
     }
@@ -88,27 +91,26 @@ const Dashboard = () => {
 
       <section className="workspace-section">
         <div className="workspace-header">
-            <h2>Campaign Planning Workspace</h2>
-            <p>Build your strategic marketing campaign step by step</p>
+          <h2>Campaign Planning Workspace</h2>
+          <p>Build your strategic marketing campaign step by step</p>
         </div>
 
         <div className="tabs">
-            {tabs.map((tab) => (
+          {tabs.map((tab) => (
             <button
-                key={tab}
-                className={`tab-btn ${activeTab === tab ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab)}
+              key={tab}
+              className={`tab-btn ${activeTab === tab ? 'active' : ''}`}
+              onClick={() => setActiveTab(tab)}
             >
-                {tab}
+              {tab}
             </button>
-            ))}
+          ))}
         </div>
 
         <div className="tab-content">
-            {renderTabContent()}
+          {renderTabContent()}
         </div>
       </section>
-
     </div>
   );
 };

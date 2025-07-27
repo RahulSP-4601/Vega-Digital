@@ -23,8 +23,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Register routers (Perplexity + Gemini both live in recommendation)
+# ✅ Register routers
 app.include_router(strategy.router, prefix="/strategy", tags=["Strategy"])
 app.include_router(recommendation.router, prefix="/recommendation", tags=["Recommendation"])
-# app.include_router(competitor.router, prefix="/competitor", tags=["Competitor"])
-# app.include_router(trends.router, tags=["Market Trends"])  # Uncomment when needed
+#app.include_router(competitor.router, prefix="/competitor", tags=["Competitor"])
+#app.include_router(trends.router, tags=["Market Trends"])
