@@ -13,20 +13,26 @@ const ScriptGenerator = () => {
   const [script, setScript] = useState('');
 
   const stored = JSON.parse(localStorage.getItem('campaignData')) || {};
-  const business = stored.businessName || 'your business';
-  const location = stored.location || 'your city';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const prompt = `Write a ${adType} for ${platform} targeting ${business} in ${location}. It should be based on the topic \"${topic}\" and optimized for the keyword \"${keyword}\". Tone: ${tone}. CTA: ${cta}. Length: ${length}.`;
-
     try {
-      const response = await fetch('http://localhost:8000/recommendation/generate-script', {
+      const response = await fetch('http://localhost:8000/script/generate-script', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt })
+        body: JSON.stringify({
+          platform,
+          adType,
+          tone,
+          topic,
+          keyword,
+          cta,
+          length,
+          campaignData: stored
+        })
       });
+
       const data = await response.json();
       setScript(data.script || 'No script returned');
     } catch (err) {

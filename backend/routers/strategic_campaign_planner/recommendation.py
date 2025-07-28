@@ -6,6 +6,7 @@ import os
 from dotenv import load_dotenv
 import json
 import re
+import ast
 
 load_dotenv()
 router = APIRouter()
@@ -116,7 +117,15 @@ Return valid JSON only.
 
         print("\n✅ Cleaned JSON block:\n", json_block)
 
-        parsed = json.loads(json_block)
+        try:
+            parsed = json.loads(json_block)
+        except json.JSONDecodeError:
+            try:
+                parsed = ast.literal_eval(json_block)
+            except Exception as e:
+                with open("broken_llm_output.json", "w") as f:
+                    f.write(raw_text)
+                raise HTTPException(status_code=500, detail=f"Perplexity returned invalid JSON: {str(e)}")
 
         for k in ["recommendedPlatforms", "notRecommendedPlatforms", "keywords", "competitors", "strategyTips", "localContext"]:
             if k not in parsed:
@@ -209,7 +218,10 @@ Recommended Platforms:
         content_text = re.sub(r'([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)(\s*):', r'\1"\2"\3:', content_text)
         content_text = re.sub(r",\s*(\}|\])", r"\1", content_text)
 
-        content_recommendation = json.loads(content_text)
+        try:
+            content_recommendation = json.loads(content_text)
+        except:
+            content_recommendation = ast.literal_eval(content_text)
 
         return {
             "recommendedPlatforms": parsed["recommendedPlatforms"],

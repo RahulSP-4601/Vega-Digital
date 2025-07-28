@@ -1,6 +1,12 @@
 from fastapi import FastAPI
-from routers.strategic_campaign_planner import strategy, recommendation, competitor, trends
 from fastapi.middleware.cors import CORSMiddleware
+from routers.strategic_campaign_planner import (
+    strategy,
+    recommendation,
+    competitor,
+    trends,
+    scriptGenerator  # ✅ New import
+)
 
 app = FastAPI(
     title="Vega Digital API",
@@ -26,5 +32,6 @@ app.add_middleware(
 # ✅ Register routers
 app.include_router(strategy.router, prefix="/strategy", tags=["Strategy"])
 app.include_router(recommendation.router, prefix="/recommendation", tags=["Recommendation"])
-#app.include_router(competitor.router, prefix="/competitor", tags=["Competitor"])
-#app.include_router(trends.router, tags=["Market Trends"])
+app.include_router(scriptGenerator.router, prefix="/script", tags=["Script Generator"])  # ✅ New line
+# app.include_router(competitor.router, prefix="/competitor", tags=["Competitor"])
+# app.include_router(trends.router, tags=["Market Trends"])
