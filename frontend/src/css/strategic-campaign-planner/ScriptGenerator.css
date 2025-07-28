@@ -1,105 +1,157 @@
 /* src/css/strategic-campaign-planner/ScriptGenerator.css */
 
-.script-generator-container {
+.script-gen-container {
+  max-width: 960px;
+  margin: 0 auto;
   padding: 2rem;
-  max-width: 900px;
-  margin: auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6fb;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
 }
 
-.script-generator-container h2 {
-  font-size: 2rem;
+.script-gen-container h2 {
+  text-align: center;
+  font-size: 2.2rem;
   font-weight: 800;
-  margin-bottom: 0.5rem;
-  color: #1f1f1f;
-}
-
-.script-generator-container .subtitle {
-  font-size: 1rem;
-  color: #555;
+  color: #4a00e0;
+  background: linear-gradient(to right, #4a00e0, #8e2de2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-bottom: 2rem;
-  font-weight: 400;
 }
 
 .script-form {
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 18px;
-  padding: 2rem;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  backdrop-filter: blur(4px);
-  border: 1px solid #eee;
+  gap: 1.4rem;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+  border-left: 4px solid #8e2de2;
+  transition: all 0.3s ease-in-out;
 }
 
 .script-form label {
+  display: flex;
+  flex-direction: column;
   font-weight: 600;
-  font-size: 1rem;
   color: #333;
-  margin-bottom: 0.25rem;
-  display: block;
-  width: 40%;
-  align-self: center;
+  font-size: 1rem;
 }
 
 .script-form input,
 .script-form select,
 .script-form textarea {
+  margin-top: 6px;
   padding: 0.75rem 1rem;
+  font-size: 0.95rem;
   border-radius: 10px;
   border: 1px solid #ccc;
-  background: #fff;
-  color: #333;
-  font-size: 0.95rem;
-  transition: 0.3s ease;
-  width: 90%;
+  background: #fdfdff;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .script-form input:focus,
 .script-form select:focus,
 .script-form textarea:focus {
-  border-color: #7b3fe4;
-  box-shadow: 0 0 0 2px rgba(123, 63, 228, 0.2);
+  border-color: #8e2de2;
+  box-shadow: 0 0 0 3px rgba(142, 45, 226, 0.15);
   outline: none;
 }
 
-.script-form textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
 .script-form button {
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(90deg, #7b3fe4, #9d5eff);
+  margin-top: 1rem;
+  padding: 0.8rem 1.8rem;
+  background: linear-gradient(to right, #4a00e0, #8e2de2);
   color: white;
   border: none;
   border-radius: 30px;
+  font-weight: 700;
   font-size: 1rem;
-  font-weight: bold;
   cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
   align-self: flex-start;
-  transition: transform 0.2s ease;
 }
 
 .script-form button:hover {
-  transform: scale(1.05);
-  background: linear-gradient(90deg, #9d5eff, #7b3fe4);
+  transform: translateY(-2px);
+  background: linear-gradient(to right, #8e2de2, #4a00e0);
 }
 
 .generated-script {
-  margin-top: 2rem;
-  background: #f9f9ff;
-  padding: 1.5rem;
-  border-left: 5px solid #7b3fe4;
-  border-radius: 10px;
-  font-family: "Courier New", monospace;
+  margin-top: 2.5rem;
+  background-color: #1c1c2e;
+  color: #f5f5f5;
+  border-radius: 12px;
+  padding: 2rem;
+  font-family: "Fira Code", "Courier New", monospace;
   font-size: 0.95rem;
-  color: #333;
-  white-space: pre-wrap;
-  line-height: 1.6;
+  overflow-x: auto;
+  line-height: 1.7;
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
+  border-left: 5px solid #a855f7;
+  position: relative;
 }
 
-.generated-script h4 {
-  margin-bottom: 0.5rem;
+.generated-script h3 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #ffe082;
+  margin-bottom: 1rem;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.1);
+}
+
+.generated-script pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #f3f3f3;
+}
+
+.generated-script pre strong {
+  color: #7dd3fc;
+  font-weight: 600;
+}
+
+.generated-script pre em {
+  color: #fca5a5;
+  font-style: normal;
+}
+
+.generated-script pre .speaker {
+  color: #86efac;
+  font-weight: 600;
+}
+
+.generated-script pre .visual {
+  color: #facc15;
+  font-style: italic;
+}
+
+.generated-script pre .sfx {
+  color: #c084fc;
+  font-style: italic;
+}
+
+.script-buttons {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.script-buttons button {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #7b3fe4;
+  color: white;
   font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.script-buttons button:hover {
+  background-color: #5e29c2;
 }

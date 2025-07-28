@@ -10,7 +10,6 @@ const ScriptGenerator = () => {
   const [keyword, setKeyword] = useState('');
   const [cta, setCta] = useState('');
 
-  // Video Ad specific
   const [length, setLength] = useState('Shorts (30 sec)');
   const [sceneStart, setSceneStart] = useState('');
   const [weather, setWeather] = useState('');
@@ -54,6 +53,22 @@ const ScriptGenerator = () => {
       console.error('Error generating script:', err);
       setScript('Failed to generate script.');
     }
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(script);
+  };
+
+  const handleDownload = () => {
+    const blob = new Blob([script], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'generated_ad_script.txt';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -144,6 +159,11 @@ const ScriptGenerator = () => {
         <div className="generated-script">
           <h3>Generated Script ✨</h3>
           <pre>{script}</pre>
+
+          <div className="script-buttons">
+            <button onClick={handleCopy}>📋 Copy</button>
+            <button onClick={handleDownload}>⬇️ Download</button>
+          </div>
         </div>
       )}
     </div>
