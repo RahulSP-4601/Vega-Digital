@@ -1,11 +1,11 @@
 // src/components/strategic-campaign-planner/ScriptGenerator.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../css/strategic-campaign-planner/ScriptGenerator.css';
 
 const ScriptGenerator = () => {
   const [adType, setAdType] = useState('');
   const [platform, setPlatform] = useState('');
-  const [tone, setTone] = useState('Professional');
+  const [tone, setTone] = useState('');
   const [topic, setTopic] = useState('');
   const [keyword, setKeyword] = useState('');
   const [cta, setCta] = useState('');
@@ -18,6 +18,13 @@ const ScriptGenerator = () => {
 
   const [script, setScript] = useState('');
   const stored = JSON.parse(localStorage.getItem('campaignData')) || {};
+
+  useEffect(() => {
+    const savedScript = localStorage.getItem('generatedScript');
+    if (savedScript) {
+      setScript(savedScript);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,7 +55,9 @@ const ScriptGenerator = () => {
       });
 
       const data = await response.json();
-      setScript(data.script || 'No script returned');
+      const finalScript = data.script || 'No script returned';
+      setScript(finalScript);
+      localStorage.setItem('generatedScript', finalScript);
     } catch (err) {
       console.error('Error generating script:', err);
       setScript('Failed to generate script.');
@@ -100,22 +109,22 @@ const ScriptGenerator = () => {
 
             <label>
               Tone:
-              <input type="text" value={tone} onChange={(e) => setTone(e.target.value)} required />
+              <input type="text" value={tone} onChange={(e) => setTone(e.target.value)} placeholder = "Eg. Exciting and Informative" required />
             </label>
 
             <label>
               Topic:
-              <input type="text" value={topic} onChange={(e) => setTopic(e.target.value)} required />
+              <input type="text" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder = "Eg. Boost your online visibility" required />
             </label>
 
             <label>
               Keyword:
-              <input type="text" value={keyword} onChange={(e) => setKeyword(e.target.value)} required />
+              <input type="text" value={keyword} onChange={(e) => setKeyword(e.target.value)} placeholder = "Eg. AI marketing tool" required />
             </label>
 
             <label>
               CTA:
-              <input type="text" value={cta} onChange={(e) => setCta(e.target.value)} required />
+              <input type="text" value={cta} onChange={(e) => setCta(e.target.value)} placeholder = "Eg. Try Vega Digital today" required />
             </label>
 
             {adType === 'Video Ad' && (
@@ -130,22 +139,30 @@ const ScriptGenerator = () => {
 
                 <label>
                   Scene Start:
-                  <input type="text" value={sceneStart} onChange={(e) => setSceneStart(e.target.value)} required />
+                  <input type="text" value={sceneStart} onChange={(e) => setSceneStart(e.target.value)} 
+                  placeholder = "Eg. A small business owner checking website traffic late night"
+                  required />
                 </label>
 
                 <label>
                   Weather:
-                  <input type="text" value={weather} onChange={(e) => setWeather(e.target.value)} required />
+                  <input type="text" value={weather} onChange={(e) => setWeather(e.target.value)} 
+                  placeholder = "Eg. Rainy evening"
+                  required />
                 </label>
 
                 <label>
                   Number of Characters:
-                  <input type="number" value={numCharacters} onChange={(e) => setNumCharacters(e.target.value)} required />
+                  <input type="number" value={numCharacters} onChange={(e) => setNumCharacters(e.target.value)} 
+                  placeholder = "Eg. 2"
+                  required />
                 </label>
 
                 <label>
                   Main Product to Promote:
-                  <input type="text" value={mainProduct} onChange={(e) => setMainProduct(e.target.value)} required />
+                  <input type="text" value={mainProduct} onChange={(e) => setMainProduct(e.target.value)} 
+                  placeholder = "Eg. AI-powered ad campaigns"
+                  required />
                 </label>
               </>
             )}
@@ -159,7 +176,6 @@ const ScriptGenerator = () => {
         <div className="generated-script">
           <h3>Generated Script ✨</h3>
           <pre>{script}</pre>
-
           <div className="script-buttons">
             <button onClick={handleCopy}>📋 Copy</button>
             <button onClick={handleDownload}>⬇️ Download</button>
