@@ -4,12 +4,20 @@ import StrategyForm from './StrategyForm';
 import Recommendations from './Recommendations';
 import CompetitorInsights from './CompetitorInsights';
 import MarketTrends from './MarketTrends';
-import ContentGeneration from './ContentGeneration'; // ✅ NEW IMPORT
+import ContentGeneration from './ContentGeneration';
+import ScriptGenerator from './ScriptGenerator'; // ✅ NEW IMPORT
 import NoStrategyMessage from './NoStrategyMessage';
 import './../../css/strategic-campaign-planner/StrategyForm.css';
 import './../../css/strategic-campaign-planner/Dashboard.css';
 
-const tabs = ['Strategy Builder', 'Market Trends', 'Recommendations', 'Competitor Analysis', 'Content Recommendation'];
+const tabs = [
+  'Strategy Builder',
+  'Market Trends',
+  'Recommendations',
+  'Competitor Analysis',
+  'Content Recommendation',
+  'Script Generator' // ✅ NEW TAB
+];
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('Strategy Builder');
@@ -32,6 +40,8 @@ const Dashboard = () => {
         return submittedData ? <MarketTrends data={submittedData} /> : <NoStrategyMessage onBack={setActiveTab} />;
       case 'Content Recommendation':
         return submittedData ? <ContentGeneration data={submittedData} /> : <NoStrategyMessage onBack={setActiveTab} />;
+      case 'Script Generator':
+        return submittedData ? <ScriptGenerator data={submittedData} /> : <NoStrategyMessage onBack={setActiveTab} />;
       default:
         return null;
     }

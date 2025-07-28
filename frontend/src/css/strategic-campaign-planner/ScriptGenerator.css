@@ -1,0 +1,105 @@
+/* src/css/strategic-campaign-planner/ScriptGenerator.css */
+
+.script-generator-container {
+  padding: 2rem;
+  max-width: 900px;
+  margin: auto;
+}
+
+.script-generator-container h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: #1f1f1f;
+}
+
+.script-generator-container .subtitle {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+.script-form {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 18px;
+  padding: 2rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  backdrop-filter: blur(4px);
+  border: 1px solid #eee;
+}
+
+.script-form label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.25rem;
+  display: block;
+  width: 40%;
+  align-self: center;
+}
+
+.script-form input,
+.script-form select,
+.script-form textarea {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #333;
+  font-size: 0.95rem;
+  transition: 0.3s ease;
+  width: 90%;
+}
+
+.script-form input:focus,
+.script-form select:focus,
+.script-form textarea:focus {
+  border-color: #7b3fe4;
+  box-shadow: 0 0 0 2px rgba(123, 63, 228, 0.2);
+  outline: none;
+}
+
+.script-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.script-form button {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(90deg, #7b3fe4, #9d5eff);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: transform 0.2s ease;
+}
+
+.script-form button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #9d5eff, #7b3fe4);
+}
+
+.generated-script {
+  margin-top: 2rem;
+  background: #f9f9ff;
+  padding: 1.5rem;
+  border-left: 5px solid #7b3fe4;
+  border-radius: 10px;
+  font-family: "Courier New", monospace;
+  font-size: 0.95rem;
+  color: #333;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.generated-script h4 {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
