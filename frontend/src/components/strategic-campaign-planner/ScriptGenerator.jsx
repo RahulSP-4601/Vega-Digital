@@ -48,7 +48,7 @@ const ScriptGenerator = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/script/generate-script', {
+      const response = await fetch('https://vega-digital.onrender.com/script/generate-script', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
