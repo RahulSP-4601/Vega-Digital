@@ -133,7 +133,7 @@ const ScriptGenerator = () => {
                   Length:
                   <select value={length} onChange={(e) => setLength(e.target.value)}>
                     <option value="Shorts (30 sec)">Shorts (30 sec)</option>
-                    <option value="Ads (1.5–2 mins)">Ads (1.5–2 mins)</option>
+                    <option value="Ads (1.5–2 mins)">Ads (1–2 mins)</option>
                   </select>
                 </label>
 
