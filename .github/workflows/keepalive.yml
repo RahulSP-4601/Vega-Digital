@@ -1,0 +1,15 @@
+name: Keep Render Awake
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # every 5 minutes (uses UTC)
+  workflow_dispatch:         # lets you run it manually from GitHub
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Curl health
+        run: |
+          # hit your health endpoint; don't fail the job if the request fails
+          curl -fsS --max-time 10 https://vega-digital.onrender.com/health || true
