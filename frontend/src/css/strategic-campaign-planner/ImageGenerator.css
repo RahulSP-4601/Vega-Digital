@@ -1,0 +1,89 @@
+.image-generator-container {
+  padding: 2rem;
+  background-color: #0c0c1e;
+  color: #fff;
+  min-height: 100vh;
+}
+
+.image-generator-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.image-panel-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.image-card {
+  flex: 1;
+  text-align: center;
+}
+
+.image-card h3 {
+  color: #fcd34d;
+  font-size: 1.25rem;
+}
+
+.editable-image {
+  max-width: 100%;
+  border-radius: 12px;
+  border: 2px solid #999;
+}
+
+/* Buttons */
+.button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-edit {
+  background-color: #3b82f6;
+}
+
+.button-edit:hover {
+  background-color: #2563eb;
+}
+
+.button-download {
+  background-color: #10b981;
+}
+
+.button-download:hover {
+  background-color: #059669;
+}
+
+/* Movable Overlay */
+.overlay-text {
+  position: absolute;
+  top: 60%;
+  left: 30%;
+  padding: 4px 10px;
+  background: rgba(0, 0, 0, 0.6);
+  font-weight: bold;
+  color: white;
+  border-radius: 4px;
+  cursor: move;
+  user-select: none;
+  z-index: 10;
+}
+
+/* Fix for Filerobot watermark font size dropdown */
+.filerobot-image-editor__modal .FIE_watermark input[type="number"] {
+  width: 80px !important;
+  padding: 6px 8px !important;
+  font-size: 16px !important;
+  height: auto !important;
+  border-radius: 6px !important;
+  background-color: #fff !important;
+  color: #000 !important;
+  border: 1px solid #ccc !important;
+}

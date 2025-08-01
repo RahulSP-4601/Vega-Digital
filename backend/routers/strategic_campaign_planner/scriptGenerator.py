@@ -1,7 +1,7 @@
 # backend/ScriptGenerator.py
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any, Optional
 import requests
 import os
 from dotenv import load_dotenv
@@ -21,6 +21,8 @@ class ScriptGenRequest(BaseModel):
     weather: Optional[str] = None
     numCharacters: Optional[str] = None
     mainProduct: Optional[str] = None
+    contactNumber: Optional[str] = None  # Keep this for editing later
+    website: Optional[str] = None        # Keep this for editing later
     campaignData: Dict[str, Any]
 
 @router.post("/generate-script")
@@ -43,27 +45,32 @@ def generate_ad_script(payload: ScriptGenRequest):
         prompt = f"""
 You are a professional digital ad scriptwriter.
 
-Write a {payload.length} {payload.adType} script for {payload.platform}.
-The goal is to promote {payload.mainProduct} for {biz_name}.
+Create a 10-second commercial script for {payload.platform}.
+Purpose: Promote {payload.mainProduct} for {biz_name} in {city_state}.
 
-Use the following context:
-- Target Audience: {business.get('demographics', [])}
-- Business Description: {business.get('businessDescription', '')}
-- Topic: {payload.topic}
-- Keyword: {payload.keyword}
+Include:
+- Timestamps like "0–4 sec: Scene 1", "5–10 sec: Scene 2"
+- Describe the scene visually and who says what.
+- Use cinematic, engaging, natural language.
+- Make it creative and concise.
+- Avoid contact number and website mentions. The user will edit that later.
+
+Inputs:
+- Scene Start: {payload.sceneStart}
+- Weather: {payload.weather}
+- Characters: {payload.numCharacters}
 - Tone: {payload.tone}
+- Keyword: {payload.keyword}
 - CTA: {payload.cta}
-- Weather in scene: {payload.weather}
-- Scene starts with: {payload.sceneStart}
-- Number of characters: {payload.numCharacters}
-- Location: {city_state}
+- Audience: {business.get('demographics', [])}
+- Business Description: {business.get('businessDescription', '')}
 
-Structure the script in three clear parts:
-1. HOOK (to grab attention visually and emotionally)
-2. BODY (explaining value or product use)
-3. CTA (strong ending with user action)
+Structure:
+0–4 sec: Scene 1 [description + dialogue]
+4–7 sec: Scene 2 [description + dialogue]
+8–10 sec: Scene 3 or CTA conclusion
 
-Output only the script as plain text.
+Return only the script as plain text.
 """
     else:
         prompt = f"""
