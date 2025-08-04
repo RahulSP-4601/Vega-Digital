@@ -1,36 +1,42 @@
 // src/components/strategic-campaign-planner/VideoGeneration.jsx
 import React, { useState } from 'react';
-import '../../css/strategic-campaign-planner/ImageGenerator.css';
+import '../../css/strategic-campaign-planner/VideoGeneration.css';
 
 const VideoGeneration = () => {
   const [videoUrl] = useState('/yoga.mp4');
 
   const handleEditClick = () => {
     alert('Edit functionality coming soon!');
-    // You can later add FFmpeg or editor launch logic here
   };
 
   return (
-    <div className="image-generator-container">
-      <h2 className="image-generator-title">🎞️ AI Video Generator & Editor</h2>
+    <div className="video-generator-container">
+      <h2 className="video-generator-title">
+        <span role="img" aria-label="video">🎞️</span> AI Video Generator & Editor
+      </h2>
 
-      <div className="image-panel-wrapper">
+
+      <div className="video-panel-wrapper">
         {/* Final Video */}
-        <div className="image-card">
-          <h3>Final Video</h3>
-          <video src={videoUrl} controls className="editable-image" />
-          <a href={videoUrl} download="final-video.mp4" className="button button-download">
-            ⬇️ Download Video
-          </a>
+        <div className="video-card glass">
+          <h3 className="video-section-title">Final Video</h3>
+          <video src={videoUrl} controls className="video-preview" />
+          <div className="video-button-center">
+            <a href={videoUrl} download="final-video.mp4" className="button button-download">
+              ⬇️ Download
+            </a>
+          </div>
         </div>
 
-        {/* Editable Video (Same as left, with edit button) */}
-        <div className="image-card">
-          <h3>Editable Video</h3>
-          <video src={videoUrl} controls className="editable-image" />
-          <button onClick={handleEditClick} className="button button-edit">
-            ✏️ Edit Video
-          </button>
+        {/* Editable Video */}
+        <div className="video-card glass">
+          <h3 className="video-section-title">Editable Video</h3>
+          <video src={videoUrl} controls className="video-preview" />
+          <div className="video-button-center">
+            <button onClick={handleEditClick} className="button button-edit">
+              ✏️ Edit
+            </button>
+          </div>
         </div>
       </div>
     </div>

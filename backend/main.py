@@ -5,7 +5,8 @@ from routers.strategic_campaign_planner import (
     recommendation,
     competitor,
     trends,
-    scriptGenerator
+    scriptGenerator,
+    ImageGenerator  # ✅ NEW
 )
 
 app = FastAPI(
@@ -27,11 +28,11 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],  # GET, POST, PUT, DELETE, OPTIONS, etc.
-    allow_headers=["*"],  # Content-Type, Authorization, etc.
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# --- Health & root routes (for uptime pings / quick check) ---
+# --- Health & root routes ---
 @app.get("/")
 def root():
     return {"status": "ok", "service": "vega-digital"}
@@ -44,5 +45,6 @@ def health():
 app.include_router(strategy.router, prefix="/strategy", tags=["Strategy"])
 app.include_router(recommendation.router, prefix="/recommendation", tags=["Recommendation"])
 app.include_router(scriptGenerator.router, prefix="/script", tags=["Script Generator"])
+app.include_router(ImageGenerator.router, tags=["Image Generator"])  # ✅ NEW
 # app.include_router(competitor.router, prefix="/competitor", tags=["Competitor"])
 # app.include_router(trends.router, tags=["Market Trends"])
